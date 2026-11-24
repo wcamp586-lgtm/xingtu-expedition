@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>星图远征</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <img src="./assets/lutuji-icon.svg" alt="" />
+          <div>
+            <h1>星图远征</h1>
+          <span>7.4.16 · 中美地图版免安装版</span>
+          </div>
+        </div>
+
+        <div class="trail-card">
+          <strong>当前范围</strong>
+          <span id="practiceScope">从一个省开始，把地级市走一遍。</span>
+        </div>
+
+        <div class="metric-grid">
+          <div>
+            <strong id="provinceCount">34</strong>
+            <span>省级</span>
+          </div>
+          <div>
+            <strong id="cityCount">0</strong>
+            <span>地级</span>
+          </div>
+          <div>
+            <strong id="areaCount">0</strong>
+            <span>区县</span>
+          </div>
+        </div>
+
+        <label class="field">
+          <span>省份</span>
+          <input id="provinceSearch" type="search" placeholder="广东 / yue" />
+        </label>
+        <nav id="provinceList" class="province-list"></nav>
+      </aside>
+
+      <main class="workspace">
+        <section class="hero-strip">
+          <div class="hero-copy">
+            <span class="eyebrow">星图 · 远征 · 连胜 · 复盘</span>
+            <h2 id="listTitle">地级行政单位</h2>
+            <p id="listSubtitle"></p>
+          </div>
+        </section>
+
+        <section class="toolbar">
+          <div class="control">
+            <label for="countrySelect">国家</label>
+            <select id="countrySelect">
+              <option value="CN" selected>中国</option>
+              <option value="US">美国 / United States</option>
+            </select>
+          </div>
+          <div class="control">
+            <label for="nameModeSelect">地名显示</label>
+            <select id="nameModeSelect">
+              <option value="both" selected>中英</option>
+              <option value="cn">中文</option>
+              <option value="en">English</option>
+            </select>
+          </div>
+          <div class="control">
+            <label for="levelSelect">层级</label>
+            <select id="levelSelect">
+              <option value="province">省级行政单位</option>
+              <option value="city" selected>地级行政单位</option>
+              <option value="area">区县级单位</option>
+            </select>
+          </div>
+          <div class="control">
+            <label for="citySelect">地级范围</label>
+            <select id="citySelect"></select>
+          </div>
+          <div class="control">
+            <label for="sortSelect">排序</label>
+            <select id="sortSelect">
+              <option value="plate" selected>车牌 ABCD</option>
+              <option value="pinyin">拼音首字母</option>
+              <option value="code">行政区划代码</option>
+              <option value="geo">省级地理顺序</option>
+            </select>
+          </div>
+          <div class="control">
+            <label for="studyFilterSelect">训练过滤</label>
+            <select id="studyFilterSelect">
+              <option value="all" selected>全部</option>
+              <option value="weak">薄弱优先</option>
+              <option value="new">未练过</option>
+              <option value="mastered">已掌握</option>
+            </select>
+          </div>
+          <div class="control grow">
+            <label for="itemSearch">筛选</label>
+            <input id="itemSearch" type="search" placeholder="名称、拼音、代码或车牌" />
+          </div>
+          <p id="studyFilterStats" class="filter-stats"></p>
+          <button id="applySuggestedFilterBtn" class="secondary filter-action" type="button" disabled>按建议训练</button>
+          <button id="resetUiPrefsBtn" class="secondary filter-action" type="button">重置偏好</button>
+        </section>
+
+        <section class="panel map-panel">
+          <div class="panel-head">
+            <div>
+              <h3 id="mapTitle">空白地图</h3>
+              <p id="mapHint">点击轮廓，把地理位置和名称一起记。</p>
+            </div>
+            <div class="map-actions">
+              <span class="map-badge">四色星图</span>
+              <button id="zoomOutBtn" class="secondary" type="button" title="快捷键：-">缩小</button>
+              <span id="mapZoomLabel" class="map-badge">地级</span>
+              <button id="zoomInBtn" class="secondary" type="button" title="快捷键：+">放大</button>
+              <button id="resetMapBtn" class="secondary" type="button" title="快捷键：0">复位</button>
+              <button id="cruiseMapBtn" class="secondary" type="button" title="快捷键：C">巡航</button>
+              <button id="drillMapBtn" class="secondary" type="button" title="快捷键：D">五连练</button>
+              <button id="drawMapBtn" class="secondary" type="button">看图抽测</button>
+              <button id="revealMapBtn" class="secondary" type="button" title="快捷键：A">显示答案</button>
+            </div>
+          </div>
+          <div class="map-body">
+            <div id="provinceMap" class="province-map" aria-label="中国省级空白地图"></div>
+            <div class="map-quiz">
+              <span>看图写地名</span>
+              <div class="map-answer-row">
+                <input id="mapAnswerInput" type="text" placeholder="输入被高亮的地名" />
+                <button id="checkMapBtn" type="button">检查</button>
+                <button id="rememberMapBtn" class="secondary" type="button" title="快捷键：M">记住</button>
+                <button id="weakMapBtn" class="secondary" type="button" title="快捷键：W">还不熟</button>
+                <button id="skipMapBtn" class="secondary" type="button" title="快捷键：S">跳过</button>
+              </div>
+              <div id="mapDrillStatus" class="map-drill-status">巡航或五连练可先观察，再记住/还不熟。</div>
+              <div id="mapResult" class="map-result">抽题后会高亮一个轮廓。</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel study-panel">
+          <div class="panel-head">
+            <div>
+              <h3>训练中心</h3>
+              <p>主动回忆、错题复习、连胜挑战和记录排行。</p>
+            </div>
+            <div class="study-tools">
+              <button id="copyWeakBtn" class="secondary" type="button" title="快捷键：Shift+W">复制薄弱点</button>
+              <button id="exportRecordsBtn" class="secondary" type="button" title="快捷键：Shift+R">导出记录</button>
+              <button id="clearRecordsBtn" class="ghost-button danger" type="button">清空记录</button>
+            </div>
+          </div>
+          <div class="study-body">
+            <div class="study-main">
+              <div class="shortcut-strip" aria-label="训练快捷键">
+                <span><kbd>P</kbd> 开始计划</span>
+                <span><kbd>Shift+P</kbd> 复制计划</span>
+                <span><kbd>Shift+W</kbd> 复制薄弱点</span>
+                <span><kbd>Shift+L</kbd> 复制清单</span>
+                <span><kbd>Shift+R</kbd> 导出记录</span>
+                <span><kbd>Q/E/T/G</kbd> 四种训练</span>
+                <span><kbd>V</kbd> 复盘队列</span>
+                <span><kbd>Shift+V</kbd> 复制复盘</span>
+                <span><kbd>Enter</kbd> 作答/续题</span>
+                <span><kbd>N/F</kbd> 下一题/结算</span>
+                <button id="copyShortcutsBtn" class="shortcut-copy" type="button" title="快捷键：Shift+K">复制键位</button>
+              </div>
+              <div class="study-stats">
+                <div>
+                  <span>练习次数</span>
+                  <strong id="studyAttempts">0</strong>
+                </div>
+                <div>
+                  <span>总正确率</span>
+                  <strong id="studyAccuracy">0%</strong>
+                </div>
+                <div>
+                  <span>连续学习</span>
+                  <strong id="studyStreak">0 天</strong>
+                </div>
+                <div>
+                  <span>当前段位</span>
+                  <strong id="studyRank">新手行者</strong>
+                </div>
+              </div>
+
+              <div class="mode-grid">
+                <button id="quickQuizBtn" type="button" title="快捷键：Q">
+                  <b>速记十题</b>
+                  <span>当前范围随机抽问</span>
+                </button>
+                <button id="weakQuizBtn" type="button" title="快捷键：E">
+                  <b>错题复习</b>
+                  <span>优先练薄弱条目</span>
+                </button>
+                <button id="streakQuizBtn" type="button" title="快捷键：T">
+                  <b>连胜挑战</b>
+                  <span>错一题即结算</span>
+                </button>
+                <button id="conquestQuizBtn" type="button" title="快捷键：G">
+                  <b>四色征服</b>
+                  <span>看地图高亮作答</span>
+                </button>
+              </div>
+
+              <div id="quizCard" class="quiz-card">
+                <span id="quizModeLabel">尚未开始</span>
+                <strong id="quizPrompt">选择一种玩法开始。</strong>
+                <div class="quiz-answer-row">
+                  <input id="quizAnswerInput" type="text" placeholder="输入地名" title="快捷键：Enter 作答，答完再按 Enter 下一题" />
+                  <button id="quizCheckBtn" type="button" title="快捷键：Enter">作答</button>
+                </div>
+                <div class="quiz-actions">
+                  <button id="quizNextBtn" class="secondary" type="button" title="快捷键：N">下一题</button>
+                  <button id="quizEndBtn" class="secondary" type="button" title="快捷键：F">结算</button>
+                </div>
+                <div id="quizFeedback" class="quiz-feedback">训练记录会自动保存。</div>
+              </div>
+            </div>
+
+            <div class="study-side">
+              <div>
+                <h4>今日任务</h4>
+                <div id="missionBrief" class="mission-box"></div>
+              </div>
+              <div>
+                <h4>星图计划</h4>
+                <div id="planBrief" class="plan-box"></div>
+                <div class="plan-actions">
+                  <button id="startPlanBtn" class="secondary" type="button" title="快捷键：P">开始计划</button>
+                  <button id="copyPlanBtn" class="secondary" type="button" title="快捷键：Shift+P">复制计划</button>
+                </div>
+              </div>
+              <div>
+                <h4>复盘队列</h4>
+                <div id="reviewQueue" class="review-queue mini-list"></div>
+                <div class="review-actions">
+                  <button id="startReviewBtn" class="secondary" type="button" title="快捷键：V">开始复盘</button>
+                  <button id="copyReviewBtn" class="secondary" type="button" title="快捷键：Shift+V">复制队列</button>
+                </div>
+              </div>
+              <div>
+                <h4>徽章</h4>
+                <div id="badgeList" class="badge-list"></div>
+              </div>
+              <div>
+                <h4>排行榜</h4>
+                <div id="leaderboardList" class="mini-list"></div>
+              </div>
+              <div>
+                <h4>薄弱点</h4>
+                <div id="weakList" class="mini-list"></div>
+              </div>
+              <div>
+                <h4>最近记录</h4>
+                <div id="recordFeed" class="mini-list"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="content-grid">
+          <div class="panel list-panel">
+            <div class="panel-head">
+              <div>
+                <h3>路线本</h3>
+                <p>按当前省份和排序列出。</p>
+              </div>
+              <button id="copyListBtn" class="ghost-button" type="button" title="快捷键：Shift+L">复制清单</button>
+            </div>
+            <div id="itemList" class="item-list"></div>
+          </div>
+
+          <div class="panel practice-panel">
+            <div class="panel-head">
+              <div>
+                <h3>抽背台</h3>
+                <p>默写后检查遗漏。</p>
+              </div>
+              <button id="resetProgressBtn" class="ghost-button danger" type="button">重置进度</button>
+            </div>
+
+            <div class="progress-row">
+              <div>
+                <span>最近得分</span>
+                <strong id="lastScore">尚未检测</strong>
+              </div>
+              <div>
+                <span>累计正确率</span>
+                <strong id="totalAccuracy">0%</strong>
+              </div>
+            </div>
+
+            <textarea id="answerInput" rows="8" placeholder="一行一个，或用空格、顿号、逗号分隔。"></textarea>
+            <div class="practice-actions">
+              <button id="checkBtn" type="button">检查</button>
+              <button id="revealBtn" class="secondary" type="button">答案</button>
+              <button id="clearBtn" class="secondary" type="button">清空</button>
+            </div>
+            <div id="resultBox" class="result-box"></div>
+
+            <div class="flashcard">
+              <div>
+                <span>随机路线</span>
+                <strong id="flashPrompt">点击抽题</strong>
+              </div>
+              <button id="drawCardBtn" class="secondary" type="button">抽题</button>
+            </div>
+          </div>
+        </section>
+
+        <footer>
+          <span id="sourceNote"></span>
+        </footer>
+      </main>
+    </div>
+
+    <script src="./data/admin-data.js"></script>
+    <script src="./data/china-map.js"></script>
+    <script src="./renderer.js"></script>
+  </body>
+</html>

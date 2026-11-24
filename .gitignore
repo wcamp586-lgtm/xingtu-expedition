@@ -1,0 +1,12 @@
+node_modules/
+dist/
+/raw/
+/build/icons/
+/build/icon.ico
+/build/icon.png
+/src/data/admin-data.js
+/src/data/china-map.js
+*_from_C_1*
+*.log
+.env
+.env.*

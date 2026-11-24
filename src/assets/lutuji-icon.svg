@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="星图远征线稿图标">
+  <g fill="none" stroke="#26d1b0" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M128 24 157 92l73 9-55 48 16 72-63-38-63 38 16-72-55-48 73-9 29-68Z"/>
+    <path d="M128 72v65"/>
+    <path d="M99 137h58"/>
+    <path d="M96 170c20 13 44 13 64 0"/>
+    <path d="M45 49 27 31"/>
+    <path d="M211 49l18-18"/>
+    <path d="M33 213l29-19"/>
+    <path d="M223 213l-29-19"/>
+  </g>
+  <g fill="none" stroke="#ff9a50" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M70 92c27-30 89-30 116 0"/>
+    <path d="M82 116c24-21 68-21 92 0"/>
+    <path d="M113 48c10-12 20-18 30-22"/>
+    <path d="M92 205c25 20 58 20 82 0"/>
+  </g>
+  <g fill="none" stroke="#5aa7ff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M128 123c-20 0-36 16-36 36"/>
+    <path d="M128 123c20 0 36 16 36 36"/>
+    <path d="M101 158h54"/>
+  </g>
+</svg>

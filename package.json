@@ -1,0 +1,71 @@
+{
+  "name": "china-map-memory",
+  "version": "7.4.16",
+  "description": "Offline desktop trainer for memorizing China provincial, prefecture-level, and county-level administrative divisions.",
+  "main": "src/main.js",
+  "author": "Codex",
+  "license": "MIT",
+  "type": "commonjs",
+  "scripts": {
+    "build:icon": "node scripts/build-icon.js",
+    "build:map": "node scripts/build-map.js",
+    "build:data": "node scripts/build-data.js",
+    "start": "npm run build:map && npm run build:data && electron .",
+    "test": "npm run build:icon && npm run build:map && npm run build:data && node --check scripts/build-icon.js && node --check scripts/build-map.js && node --check scripts/build-data.js && node --check scripts/after-pack.js && node --check scripts/dist-win.js && node --check src/main.js && node --check src/renderer.js && node scripts/test.js && node scripts/interaction-test.js",
+    "dist": "npm run build:icon && npm run build:map && npm run build:data && node scripts/dist-win.js",
+    "portable": "npm run build:icon && npm run build:map && npm run build:data && node scripts/portable.js"
+  },
+  "build": {
+    "appId": "local.china-map-memory",
+    "productName": "星图远征",
+    "directories": {
+      "output": "dist"
+    },
+    "afterPack": "scripts/after-pack.js",
+    "extraFiles": [
+      {
+        "from": "build/icon.ico",
+        "to": "星图远征.ico"
+      }
+    ],
+    "files": [
+      "src/**/*",
+      "build/icon.ico",
+      "build/icon.png",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "build/icon.ico",
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "include": "build/installer.nsh",
+      "shortcutName": "星图远征"
+    }
+  },
+  "dependencies": {
+    "@province-city-china/area": "^8.5.8",
+    "@province-city-china/city": "^8.5.8",
+    "@province-city-china/province": "^8.5.8",
+    "pinyin-pro": "^3.28.1"
+  },
+  "devDependencies": {
+    "electron": "^42.0.0",
+    "electron-builder": "^26.8.1",
+    "jsdom": "^29.1.1",
+    "png-to-ico": "^3.0.1",
+    "rcedit": "^5.0.2",
+    "sharp": "^0.34.5",
+    "topojson-client": "^3.1.0",
+    "us-atlas": "^3.0.1"
+  }
+}
